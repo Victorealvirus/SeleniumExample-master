@@ -26,6 +26,10 @@ namespace LawDepotInterview.GuiTests.PageObjects
         {
             return _driver.FindElement(By.Id("add-to-cart-sauce-labs-bolt-t-shirt"));
         }
+        public IWebElement GetTShirtRemoveFromCartButton()
+        {
+            return _driver.FindElement(By.Id("remove-sauce-labs-bolt-t-shirt"));
+        }
         public IWebElement GetOnsieAddToCartButton()
         {
             return _driver.FindElement(By.Id("add-to-cart-sauce-labs-onesie"));

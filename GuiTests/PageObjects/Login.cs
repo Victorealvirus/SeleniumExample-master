@@ -34,7 +34,7 @@ namespace Tests.PageObjects
             LoginButton.Click();
         }
 
-        public void LoginAsStdUser(string baseUrl)
+        public void LoginAsStandardUser(string baseUrl)
         {
             LoginWithCredentials(baseUrl, stdUser, stdPassword);
         }

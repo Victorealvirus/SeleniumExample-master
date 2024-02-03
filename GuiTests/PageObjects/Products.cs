@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace LawDepotInterview.GuiTests.PageObjects
 {
@@ -22,6 +23,10 @@ namespace LawDepotInterview.GuiTests.PageObjects
         {
             return _driver.FindElement(By.Id("add-to-cart-sauce-labs-bike-light"));
         }
+        public IWebElement GetBikeLightRemoveFromCartButton()
+        {
+            return _driver.FindElement(By.Id("remove-sauce-labs-bike-light"));
+        }
         public IWebElement GetShoppingCartLink()
         {
             return _driver.FindElement(By.ClassName("shopping_cart_link"));
@@ -42,6 +47,11 @@ namespace LawDepotInterview.GuiTests.PageObjects
         public IWebElement GetLogoutButton()
         {
             return _driver.FindElement(By.Id("logout_sidebar_link"));
+        }
+        public void SetProductSortOrder(string sortOrder)
+        {
+            var select = new SelectElement(_driver.FindElement(By.ClassName("product_sort_container")));
+            select.SelectByText(sortOrder);
         }
     }
 }
