@@ -19,7 +19,7 @@ namespace Tests.PageObjects
         private string stdPassword = "secret_sauce";
 
 
-        public void LoginAsStdUser(string baseUrl)
+        public void Login(string baseUrl, string username, string password)
         {
             _driver.Navigate().GoToUrl(baseUrl);
             UserIdField = _driver.FindElement(By.Id("user-name"));
@@ -32,6 +32,11 @@ namespace Tests.PageObjects
 
             LoginButton = _driver.FindElement(By.Id("login-button"));
             LoginButton.Click();
+        }
+
+        public void LoginAsStdUser(string baseUrl)
+        {
+            Login(baseUrl, stdUser, stdPassword);
         }
     }
 }
