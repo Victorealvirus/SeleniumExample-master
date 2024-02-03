@@ -26,5 +26,13 @@ namespace LawDepotInterview.GuiTests.PageObjects
         {
             return _driver.FindElement(By.ClassName("shopping_cart_link"));
         }
+        public IWebElement GetTShirtLink()
+        {
+            return _driver.FindElement(By.Id("item_1_title_link"));
+        }
+        public IWebElement GetOnsieLink()
+        {
+            return _driver.FindElement(By.Id("item_2_title_link"));
+        }
     }    
 }

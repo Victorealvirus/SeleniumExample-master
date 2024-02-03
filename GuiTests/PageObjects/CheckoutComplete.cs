@@ -14,5 +14,9 @@ namespace LawDepotInterview.GuiTests.PageObjects
         {
             return _driver.FindElement(By.ClassName("complete-text"));
         }
+        public IWebElement GetBackToProductsButton()
+        {
+            return _driver.FindElement(By.Id("back-to-products"));
+        }
     }
 }

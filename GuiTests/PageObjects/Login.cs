@@ -41,9 +41,7 @@ namespace Tests.PageObjects
 
         public IWebElement GetLoginError()
         {
-            return _driver.FindElement(By.ClassName("error-message-container error"));
+            return _driver.FindElement(By.CssSelector("div[class='error-message-container error']"));
         }
-
-
     }
 }

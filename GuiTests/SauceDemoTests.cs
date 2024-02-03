@@ -47,11 +47,20 @@ namespace LawDepotInterview.GuiTests
             // Arrange
             // Act
             Login loginPage = new Login(_driver);
+
+            //Invalid credentials
             loginPage.LoginWithCredentials(_baseUrl, "BadUser", "BadPassword");
+
+            //Assert
             loginPage.GetLoginError().Text
                 .Should().Be("Epic sadface: Username and password do not match any user in this service");
 
+            //Invalid credentials
+            loginPage.LoginWithCredentials(_baseUrl, "locked_out_user", "secret_sauce");
+
             // Assert
+            loginPage.GetLoginError().Text
+                .Should().Be("Epic sadface: Sorry, this user has been locked out.");
         }
 
 
@@ -61,7 +70,7 @@ namespace LawDepotInterview.GuiTests
             // Arrange
             // Act
 
-            Login loginPage = new Login(_driver); 
+            Login loginPage = new Login(_driver);
             loginPage.LoginAsStdUser(_baseUrl);
 
             //Add two items to cart
@@ -94,8 +103,47 @@ namespace LawDepotInterview.GuiTests
             checkoutComplete.GetCompleteText().Text
                 .Should().Be("Your order has been dispatched, and will arrive just as fast as the pony can get there!");
 
+            //We get back to the products page
+            checkoutComplete.GetBackToProductsButton().Click();
+            productsList.GetInventory().Displayed.Should().BeTrue();
         }
 
+
+        [Test]
+        public void AddingToCartFromItemPageShouldSucceed()
+        {
+            // Arrange
+            // Act
+
+            Login loginPage = new Login(_driver);
+            loginPage.LoginAsStdUser(_baseUrl);
+
+            //Validate data and Add Sauce Labs Bolt T-Shirt to cart
+            Products productsList = new Products(_driver);
+            productsList.GetTShirtLink().Click();
+
+            Item item = new Item(_driver);
+            item.GetTitle().Text.Should().Be("Sauce Labs Bolt T-Shirt");
+            item.GetDescription().Text
+                .Should().Be("Get your testing superhero on with the Sauce Labs bolt T-shirt. From American Apparel, 100% ringspun combed cotton, heather gray with red bolt.");
+            item.GetPrice().Text.Should().Be("$15.99");
+            item.GetTShirtAddToCartButton().Click();
+
+            //We should return to products page
+            item.GetGoBackToProductsButton().Click();
+            productsList.GetInventory().Displayed.Should().BeTrue();
+
+            //Go into onsie page and add to cart
+            productsList.GetOnsieLink().Click();
+            item.GetOnsieAddToCartButton().Click();
+            item.GetShoppingCartLink().Click();
+
+            //Cart should reflect the right items
+            Cart cart = new Cart(_driver);
+            IList<IWebElement> elements = _driver.FindElements(By.ClassName("inventory_item_name"));
+            elements[0].Text.Should().Be("Sauce Labs Bolt T-Shirt");
+            elements[1].Text.Should().Be("Sauce Labs Onesie");
+        }
     }
 }
 

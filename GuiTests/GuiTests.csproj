@@ -74,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PageObjects\Item.cs" />
     <Compile Include="PageObjects\CheckoutComplete.cs" />
     <Compile Include="PageObjects\Confirmation.cs" />
     <Compile Include="PageObjects\CheckoutForm.cs" />
