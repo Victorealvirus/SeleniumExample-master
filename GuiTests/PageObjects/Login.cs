@@ -2,11 +2,11 @@
 
 namespace Tests.PageObjects
 {
-    public class LoginPage
+    public class Login
     {
         private readonly IWebDriver _driver;
 
-        public LoginPage(IWebDriver driver)
+        public Login(IWebDriver driver)
         {
             _driver = driver;
         }
@@ -19,16 +19,16 @@ namespace Tests.PageObjects
         private string stdPassword = "secret_sauce";
 
 
-        public void Login(string baseUrl, string username, string password)
+        public void LoginWithCredentials(string baseUrl, string username, string password)
         {
             _driver.Navigate().GoToUrl(baseUrl);
             UserIdField = _driver.FindElement(By.Id("user-name"));
             UserIdField.Clear();
-            UserIdField.SendKeys(stdUser);
+            UserIdField.SendKeys(username);
 
             PasswordField = _driver.FindElement(By.Id("password"));
             PasswordField.Clear();
-            PasswordField.SendKeys(stdPassword);
+            PasswordField.SendKeys(password);
 
             LoginButton = _driver.FindElement(By.Id("login-button"));
             LoginButton.Click();
@@ -36,7 +36,14 @@ namespace Tests.PageObjects
 
         public void LoginAsStdUser(string baseUrl)
         {
-            Login(baseUrl, stdUser, stdPassword);
+            LoginWithCredentials(baseUrl, stdUser, stdPassword);
         }
+
+        public IWebElement GetLoginError()
+        {
+            return _driver.FindElement(By.ClassName("error-message-container error"));
+        }
+
+
     }
 }

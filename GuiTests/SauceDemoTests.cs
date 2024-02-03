@@ -7,6 +7,7 @@ using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Tests.PageObjects;
 
 namespace LawDepotInterview.GuiTests
@@ -14,9 +15,11 @@ namespace LawDepotInterview.GuiTests
     [TestFixture]
     public class SauceDemoTests
     {
+
         private IWebDriver _driver;
         private StringBuilder _verificationErrors;
         private string _baseUrl;
+        
 
         [SetUp]
         public void SetupTest()
@@ -41,36 +44,58 @@ namespace LawDepotInterview.GuiTests
         }
 
         [Test]
-        public void LoginWithValidCredentialsShouldSucceed()
+        public void LoginWithInvalidCredentialsShouldFailWithCorrectErrors()
         {
             // Arrange
             // Act
-            new LoginPage(_driver).LoginAsStdUser(_baseUrl);
+            Login loginPage = new Login(_driver);
+            loginPage.LoginWithCredentials(_baseUrl, "BadUser", "BadPassword");
+            loginPage.GetLoginError().Text
+                .Should().Be("Epic sadface: Username and password do not match any user in this service");
 
             // Assert
-            new ProductsList(_driver).GetInventory.Displayed.Should().BeTrue();
         }
 
 
         [Test]
-        public void CheckoutWorkflowShouldSucceed()
+        public void CheckoutWithGoodDataShouldSucceed()
         {
             // Arrange
             // Act
-            new LoginPage(_driver).LoginAsStdUser(_baseUrl);
-            new ProductsList(_driver).GetBackpackAddToCartButton.Click();
-            new ProductsList(_driver).GetBackpackAddToCartButton.Click();
 
-            new ProductsList(_driver).GetShoppingCartLink.Click();
+            Login loginPage = new Login(_driver); 
+            loginPage.LoginAsStdUser(_baseUrl);
 
-            // Get all the elements available with tag name 'p'
-            IList<IWebElement> elements = _driver.FindElements(By.ClassName("inventory_item_name"));
-            foreach (IWebElement e in elements)
-            {
-                System.Console.WriteLine(e.Text);
-            }
+            //Add two items to cart
+            Products productsList = new Products(_driver);
+            productsList
+                .GetBackpackAddToCartButton().Click();
+            productsList
+                .GetBikeLightAddToCartButton().Click();
+            productsList
+                .GetShoppingCartLink().Click();
+
+            Cart cart = new Cart(_driver);
+            cart.GetCheckoutButton().Click();
+
+            //Fill Checkout form with valid user data
+            CheckoutForm checkoutForm = new CheckoutForm(_driver);
+            checkoutForm.SetFirstNameField();
+            checkoutForm.SetLastNameField();
+            checkoutForm.SetPostalCodeField();
+            checkoutForm.GetContinueButton().Click();
 
             // Assert
+
+            //Total should be as expected
+            Confirmation confirmation = new Confirmation(_driver);
+            confirmation.GetTotal().Should().Be("Total: $43.18");
+            confirmation.GetFinishButton().Click();
+
+            CheckoutComplete checkoutComplete = new CheckoutComplete(_driver);
+            checkoutComplete.GetCompleteText()
+                .Should().Be("Your order has been dispatched, and will arrive just as fast as the pony can get there!");
+
         }
 
     }
