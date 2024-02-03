@@ -46,5 +46,9 @@ namespace LawDepotInterview.GuiTests.PageObjects
         {
             return _driver.FindElement(By.Id("continue"));
         }
+        public IWebElement GetError()
+        {
+            return _driver.FindElement(By.CssSelector("div[class='error-message-container error']"));
+        }
     }
 }

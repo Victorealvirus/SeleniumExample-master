@@ -256,9 +256,51 @@ namespace LawDepotInterview.GuiTests
 
             elementPrices.Should().BeInDescendingOrder();
 
-        } 
+        }
 
+        [Test]
+        public void BadUserDataAtCheckoutShouldGiveErrors()
+        {
+            // Arrange
+            // Act
 
+            Login loginPage = new Login(_driver);
+            loginPage.LoginAsStandardUser(_baseUrl);
+
+            //Add two items to cart
+            Products productsList = new Products(_driver);
+            productsList
+                .GetBackpackAddToCartButton().Click();
+            productsList
+                .GetShoppingCartLink().Click();
+
+            Cart cart = new Cart(_driver);
+            cart.GetCheckoutButton().Click();
+
+            //Try to fill Checkout form with missing First Name
+            CheckoutForm checkoutForm = new CheckoutForm(_driver);
+            checkoutForm.SetFirstNameField("");
+            checkoutForm.SetLastNameField();
+            checkoutForm.SetPostalCodeField();
+            checkoutForm.GetContinueButton().Click();
+            checkoutForm.GetError().Text.Should().Be("Error: First Name is required");
+
+            //Try to fill Checkout form with missing Last Name
+            _driver.Navigate().Refresh();
+            checkoutForm.SetFirstNameField();
+            checkoutForm.SetLastNameField("");
+            checkoutForm.SetPostalCodeField();
+            checkoutForm.GetContinueButton().Click();
+            checkoutForm.GetError().Text.Should().Be("Error: Last Name is required");
+
+            //Try to fill Checkout form with missing Postal Code
+            _driver.Navigate().Refresh();
+            checkoutForm.SetFirstNameField();
+            checkoutForm.SetLastNameField();
+            checkoutForm.SetPostalCodeField("");
+            checkoutForm.GetContinueButton().Click();
+            checkoutForm.GetError().Text.Should().Be("Error: Postal Code is required");
+        }
     }
 }
 
