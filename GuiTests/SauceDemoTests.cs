@@ -7,7 +7,6 @@ using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using Tests.PageObjects;
 
 namespace LawDepotInterview.GuiTests
@@ -143,6 +142,39 @@ namespace LawDepotInterview.GuiTests
             IList<IWebElement> elements = _driver.FindElements(By.ClassName("inventory_item_name"));
             elements[0].Text.Should().Be("Sauce Labs Bolt T-Shirt");
             elements[1].Text.Should().Be("Sauce Labs Onesie");
+        }
+
+
+        [Test]
+        public void LoggingOutAndBackInShouldMaintainCart()
+        {
+            // Arrange
+            // Act
+
+            Login loginPage = new Login(_driver);
+            loginPage.LoginAsStdUser(_baseUrl);
+
+            //Add two items to cart
+            Products productsList = new Products(_driver);
+            productsList
+                .GetBackpackAddToCartButton().Click();
+            productsList
+                .GetBikeLightAddToCartButton().Click();
+            productsList
+                .GetShoppingCartLink().Click();
+
+            //Log out and back in
+            productsList.GetHamburgerMenuButton().Click();
+            productsList.GetLogoutButton().Click();
+            loginPage.LoginAsStdUser(_baseUrl);
+
+            //Cart should reflect the right items
+            productsList
+                .GetShoppingCartLink().Click();
+            Cart cart = new Cart(_driver);
+            IList<IWebElement> elements = _driver.FindElements(By.ClassName("inventory_item_name"));
+            elements[0].Text.Should().Be("Sauce Labs Backpack");
+            elements[1].Text.Should().Be("Sauce Labs Bike Light");
         }
     }
 }
