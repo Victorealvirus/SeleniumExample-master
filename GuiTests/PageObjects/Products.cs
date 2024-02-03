@@ -39,7 +39,6 @@ namespace LawDepotInterview.GuiTests.PageObjects
         {
             return _driver.FindElement(By.Id("item_2_title_link"));
         }
-
         public IWebElement GetHamburgerMenuButton()
         {
             return _driver.FindElement(By.ClassName("bm-burger-button"));
