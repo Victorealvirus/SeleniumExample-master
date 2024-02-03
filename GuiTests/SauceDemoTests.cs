@@ -15,11 +15,9 @@ namespace LawDepotInterview.GuiTests
     [TestFixture]
     public class SauceDemoTests
     {
-
         private IWebDriver _driver;
         private StringBuilder _verificationErrors;
         private string _baseUrl;
-        
 
         [SetUp]
         public void SetupTest()
@@ -89,11 +87,11 @@ namespace LawDepotInterview.GuiTests
 
             //Total should be as expected
             Confirmation confirmation = new Confirmation(_driver);
-            confirmation.GetTotal().Should().Be("Total: $43.18");
+            confirmation.GetTotal().Text.Should().Be("Total: $43.18");
             confirmation.GetFinishButton().Click();
 
             CheckoutComplete checkoutComplete = new CheckoutComplete(_driver);
-            checkoutComplete.GetCompleteText()
+            checkoutComplete.GetCompleteText().Text
                 .Should().Be("Your order has been dispatched, and will arrive just as fast as the pony can get there!");
 
         }

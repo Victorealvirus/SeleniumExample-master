@@ -18,7 +18,7 @@ namespace LawDepotInterview.GuiTests.PageObjects
 
         public IWebElement GetTotal()
         {
-            return _driver.FindElement(By.ClassName("summary_info_label summary_total_label"));
+            return _driver.FindElement(By.CssSelector("div[class='summary_info_label summary_total_label']"));
         }
     }
 }
